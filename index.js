@@ -48,54 +48,7 @@ var spotifyApi = new SpotifyWebApi({
     redirectUri : redirect_uri,
     scope: auth_scope
   });
-  
-
-db.findOne({_id: 'tokenData'}, function(err, doc){
-    if (doc==null){
-        db.insert(tokenData, function (err, newDoc) {   
-        });
-    } else {
-        tokenData.access_token = doc.access_token
-        tokenData.refresh_token = doc.refresh_token
-        tokenData.spotifyTokenExpirationEpoch = doc.spotifyTokenExpirationEpoch
-        spotifyApi.setAccessToken(tokenData.access_token);
-        spotifyApi.setRefreshToken(tokenData.refresh_token);
-        checkToken()
-    }
-})
-db.findOne({_id: 'playerData'}, function(err, doc){
-    if (doc==null){
-        db.insert(player, function (err, newDoc) {   
-        });
-    } else {
-        player.volume = doc.volume
-
-    }
-})
-
-app.get('/login', function(req, res) {
-    res.redirect('https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-        response_type: 'code',
-        client_id: client_id,
-        scope: auth_scope,
-        redirect_uri: redirect_uri
-    }));
-});
-
-
-app.get('/callback', function(req, res) {
-    var code = req.query.code || null;
-
-    authCodeGrant(code)
-    res.redirect('/')
-
-  });
-
-
-
-
-function clientCodeGrant(){
+  function clientCodeGrant(){
     // Retrieve an access token
     spotifyApi.clientCredentialsGrant()
     .then(function(data) {
@@ -157,7 +110,53 @@ function checkToken(){
             fulfill(false);
         }
     })
-}
+} 
+db.findOne({_id: 'tokenData'}, function(err, doc){
+    if (doc==null){
+        db.insert(tokenData, function (err, newDoc) {   
+        });
+    } else {
+        tokenData.access_token = doc.access_token
+        tokenData.refresh_token = doc.refresh_token
+        tokenData.spotifyTokenExpirationEpoch = doc.spotifyTokenExpirationEpoch
+        spotifyApi.setAccessToken(tokenData.access_token);
+        spotifyApi.setRefreshToken(tokenData.refresh_token);
+        checkToken()
+    }
+})
+db.findOne({_id: 'playerData'}, function(err, doc){
+    if (doc==null){
+        db.insert(player, function (err, newDoc) {   
+        });
+    } else {
+        player.volume = doc.volume
+
+    }
+})
+
+app.get('/login', function(req, res) {
+    res.redirect('https://accounts.spotify.com/authorize?' +
+        querystring.stringify({
+        response_type: 'code',
+        client_id: client_id,
+        scope: auth_scope,
+        redirect_uri: redirect_uri
+    }));
+});
+
+
+app.get('/callback', function(req, res) {
+    var code = req.query.code || null;
+
+    authCodeGrant(code)
+    res.redirect('/')
+
+  });
+
+
+
+
+
 io.on('connection', function(socket){
     socket.emit('err', 'all good e')
     console.log('a user connected');
