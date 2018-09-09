@@ -26,6 +26,7 @@ git clone https://github.com/hickmanz/jukebox_socket-server /opt/app
 
 # Install app dependencies
 cd /opt/app/
+git pull
 npm install
 
 # Create a nodeapp user. The application will run as this user.

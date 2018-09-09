@@ -104,6 +104,7 @@ function clientCodeGrant(){
         spotifyApi.setAccessToken(data.body['access_token']);
     }, function(err) {
         console.log('Something went wrong when retrieving an access token', err.message);
+        socket.emit('err', err)
     });
 }
 
@@ -126,8 +127,10 @@ function authCodeGrant(authorizationCode){
         })
 
         console.log('Retrieved token. It expires in ' + Math.floor(tokenData.spotifyTokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
+        socket.emit('err', err)
     }, function(err) {
         console.log('Something went wrong when retrieving the access token!', err.message);
+        socket.emit('err', err)
     });
 
 }
@@ -149,6 +152,7 @@ function checkToken(){
                 fulfill(true);
             }, function(err) {
                 console.log('Could not refresh the token!', err.message);
+                socket.emit('err', err)
                 fulfill(false);
             });
         } else {
