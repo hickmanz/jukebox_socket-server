@@ -84,7 +84,7 @@ app.get('/callback', function(req, res) {
 
   });
 
-
+  io.on('connection', function(socket){
 var spotifyApi = new SpotifyWebApi({
   clientId : client_id,
   clientSecret : client_secret,
@@ -161,10 +161,11 @@ function checkToken(){
     })
 }
 
-io.on('connection', function(socket){
+
     console.log('a user connected');
     socket.emit('update-player', player)
     socket.emit('updateQueue', currentQueue);
+    
 
     socket.on('player-get-token', function(data, fn){
         checkToken().then(function(){
