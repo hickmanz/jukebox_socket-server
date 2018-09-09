@@ -92,8 +92,7 @@ app.get('/callback', function(req, res) {
 
   });
 
-  io.on('connection', function(socket){
-    socket.emit('err', 'all good e')
+
 
 
 function clientCodeGrant(){
@@ -107,7 +106,6 @@ function clientCodeGrant(){
         spotifyApi.setAccessToken(data.body['access_token']);
     }, function(err) {
         console.log('Something went wrong when retrieving an access token', err.message);
-        socket.emit('err', err)
     });
 }
 
@@ -130,10 +128,8 @@ function authCodeGrant(authorizationCode){
         })
 
         console.log('Retrieved token. It expires in ' + Math.floor(tokenData.spotifyTokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
-        socket.emit('err', 'all good homie')
     }, function(err) {
         console.log('Something went wrong when retrieving the access token!', err.message);
-        socket.emit('err', err)
     });
 
 }
@@ -155,7 +151,6 @@ function checkToken(){
                 fulfill(true);
             }, function(err) {
                 console.log('Could not refresh the token!', err.message);
-                socket.emit('err', err)
                 fulfill(false);
             });
         } else {
@@ -163,8 +158,8 @@ function checkToken(){
         }
     })
 }
-
-
+io.on('connection', function(socket){
+    socket.emit('err', 'all good e')
     console.log('a user connected');
     socket.emit('update-player', player)
     socket.emit('updateQueue', currentQueue);
