@@ -42,6 +42,14 @@ var tokenData = {
     spotifyTokenExpirationEpoch: ''
 }
 
+var spotifyApi = new SpotifyWebApi({
+    clientId : client_id,
+    clientSecret : client_secret,
+    redirectUri : redirect_uri,
+    scope: auth_scope
+  });
+  
+
 db.findOne({_id: 'tokenData'}, function(err, doc){
     if (doc==null){
         db.insert(tokenData, function (err, newDoc) {   
@@ -86,12 +94,6 @@ app.get('/callback', function(req, res) {
 
   io.on('connection', function(socket){
     socket.emit('err', 'all good e')
-var spotifyApi = new SpotifyWebApi({
-  clientId : client_id,
-  clientSecret : client_secret,
-  redirectUri : redirect_uri,
-  scope: auth_scope
-});
 
 
 function clientCodeGrant(){
