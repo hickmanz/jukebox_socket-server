@@ -85,6 +85,7 @@ app.get('/callback', function(req, res) {
   });
 
   io.on('connection', function(socket){
+    socket.emit('err', 'all good e')
 var spotifyApi = new SpotifyWebApi({
   clientId : client_id,
   clientSecret : client_secret,
@@ -127,7 +128,7 @@ function authCodeGrant(authorizationCode){
         })
 
         console.log('Retrieved token. It expires in ' + Math.floor(tokenData.spotifyTokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
-        socket.emit('err', err)
+        socket.emit('err', 'all good homie')
     }, function(err) {
         console.log('Something went wrong when retrieving the access token!', err.message);
         socket.emit('err', err)
@@ -194,6 +195,7 @@ function checkToken(){
                 console.dir(state);
             }, err =>{
                 console.error(err);
+                socket.emit('err', err)
             });
         })
 
