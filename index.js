@@ -17,7 +17,7 @@ app.use('/', express.static('public'))
 
 var client_id = 'fd4b30f8ddd544ba8fcedd8d99e80e50'
 var client_secret = 'c935d0a44207400d994571277722a095'
-var redirect_uri = 'http://35.237.12.119:8080/callback'
+var redirect_uri = 'http://api.zaqify.com:8080/callback'
 var auth_scope = 'streaming user-read-birthdate user-read-recently-played user-read-email user-read-private user-read-playback-state user-modify-playback-state'
 var access_token;
 var refresh_token;
