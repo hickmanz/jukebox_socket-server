@@ -25,7 +25,7 @@ var refresh_token;
 var playerTimer
 
 var player = {
-    volume: .5,
+    volume: 0.5,
     state: "paused",
     duration: 0,
     position: 0,

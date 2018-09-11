@@ -4,7 +4,7 @@ var currentResults = {};
 var recentList 
 var playerTimer
 var player = {
-    volume: 0,
+    volume: .5,
     currentPlaying: null,
     position: 0,
     duration:0,
