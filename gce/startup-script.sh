@@ -3,10 +3,6 @@ set -v
 # Talk to the metadata server to get the project id
 PROJECTID=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google")
 
-# Install logging monitor. The monitor will automatically pick up logs sent to
-# syslog.
-curl -s "https://storage.googleapis.com/signals-agents/logging/google-fluentd-install.sh" | bash
-service google-fluentd restart &
 
 # Install dependencies from apt
 apt-get update

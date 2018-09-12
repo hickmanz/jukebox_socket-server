@@ -12,6 +12,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "express": "1.7.16",
+    "gcp-metadata": "^0.7.0",
     "nedb": "^1.8.0",
     "querystring": "^0.2.0",
     "request": "^2.88.0",
