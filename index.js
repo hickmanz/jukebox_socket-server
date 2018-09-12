@@ -15,24 +15,15 @@ var historyQueue = []
 
 app.use('/', express.static('public'))
 
+var client_id
+var client_secret
+var redirect_uri
 
-const isGcpAvailable = await gcpMetadata.isAvailable();
-
-if(isGcpAvailable){
-    const res = await gcpMetadata.instance();
-    console.log(res.data);
-} else {
-    var client_secret = process.env.CLIENTSECRET
-    var redirect_uri = process.env.REDIRECTURI
-}
-
-
-var client_id = 'fd4b30f8ddd544ba8fcedd8d99e80e50'
-
-console.log(client_id)
 var auth_scope = 'streaming user-read-birthdate user-read-recently-played user-read-email user-read-private user-read-playback-state user-modify-playback-state'
 var access_token;
 var refresh_token;
+
+var spotifyApi
 
 var playerTimer
 
@@ -54,28 +45,66 @@ var tokenData = {
     spotifyTokenExpirationEpoch: ''
 }
 
-db.findOne({_id: 'tokenData'}, function(err, doc){
-    if (doc==null){
-        db.insert(tokenData, function (err, newDoc) {   
-        });
-    } else {
-        tokenData.access_token = doc.access_token
-        tokenData.refresh_token = doc.refresh_token
-        tokenData.spotifyTokenExpirationEpoch = doc.spotifyTokenExpirationEpoch
-        spotifyApi.setAccessToken(tokenData.access_token);
-        spotifyApi.setRefreshToken(tokenData.refresh_token);
-        checkToken()
-    }
-})
-db.findOne({_id: 'playerData'}, function(err, doc){
-    if (doc==null){
-        db.insert(player, function (err, newDoc) {   
-        });
-    } else {
-        player.volume = doc.volume
 
+
+async function getMetadata() {
+    const isGcpAvailable = await gcpMetadata.isAvailable();
+
+    if(isGcpAvailable){
+        const res = await gcpMetadata.instance();
+        setupPlayer(isGcpAvailable, res.data)
+
+    } else {
+        client_id = process.env.CLIENTID
+        client_secret = process.env.CLIENTSECRET
+        redirect_uri = process.env.REDIRECTURI
+        setupPlayer(false)
     }
-})
+}
+
+
+async function setupPlayer(isGCP, data) {
+    if(isGCP){
+        console.log('is GCP')
+        console.log(data);
+    }else{
+        console.log('is not GCP')
+    }
+    spotifyApi = new SpotifyWebApi({
+        clientId : client_id,
+        clientSecret : client_secret,
+        redirectUri : redirect_uri,
+        scope: auth_scope
+    });
+
+    db.findOne({_id: 'tokenData'}, function(err, doc){
+        if (doc==null){
+            db.insert(tokenData, function (err, newDoc) {   
+            });
+        } else {
+            tokenData.access_token = doc.access_token
+            tokenData.refresh_token = doc.refresh_token
+            tokenData.spotifyTokenExpirationEpoch = doc.spotifyTokenExpirationEpoch
+            spotifyApi.setAccessToken(tokenData.access_token);
+            spotifyApi.setRefreshToken(tokenData.refresh_token);
+            checkToken()
+        }
+    })
+    db.findOne({_id: 'playerData'}, function(err, doc){
+        if (doc==null){
+            db.insert(player, function (err, newDoc) {   
+            });
+        } else {
+            player.volume = doc.volume
+    
+        }
+    })
+
+}
+
+getMetadata()
+
+
 
 app.get('/login', function(req, res) {
     res.redirect('https://accounts.spotify.com/authorize?' +
@@ -97,12 +126,7 @@ app.get('/callback', function(req, res) {
   });
 
 
-var spotifyApi = new SpotifyWebApi({
-  clientId : client_id,
-  clientSecret : client_secret,
-  redirectUri : redirect_uri,
-  scope: auth_scope
-});
+
 
 
 function clientCodeGrant(){
