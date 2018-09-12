@@ -318,9 +318,9 @@ io.on('connection', function(socket){
         }
     })
     socket.on('scrub', function(data){
-        if (io.sockets.connected[player.socket]) {
-            io.sockets.connected[player.socket].emit('seek', data)
-        }
+        //if (io.sockets.connected[player.socket]) {
+            io.to(player.socket).emit('seek', data)
+        //}
     })
     function updatePlayerTime(){
         clearInterval(playerTimer)
