@@ -51,7 +51,11 @@ async function getMetadata() {
     const isGcpAvailable = await gcpMetadata.isAvailable();
 
     if(isGcpAvailable){
-        const res = await gcpMetadata.instance();
+        const res = await gcpMetadata.instance('attributes');
+        client_id = res.data.CLIENTID
+        client_secret = res.data.CLIENTSECRET
+        redirect_uri = res.data.REDIRECTURI
+        console.log(redirect_uri)
         setupPlayer(isGcpAvailable, res.data)
 
     } else {
