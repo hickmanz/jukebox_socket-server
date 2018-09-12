@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 var http = require('http').Server(app);
+var config = require('config');
 var querystring = require('querystring');
 var io = require('socket.io')(http);
 const path = require('path')
 var SpotifyWebApi = require('spotify-web-api-node');
-const gcpMetadata = require('gcp-metadata');
 
 const Datastore = require('nedb');
 const db = new Datastore({ filename: path.join('./', 'main.db'), autoload: true, timestampData: true  });
@@ -45,35 +45,16 @@ var tokenData = {
     spotifyTokenExpirationEpoch: ''
 }
 
-
-
 async function getMetadata() {
-    const isGcpAvailable = await gcpMetadata.isAvailable();
-
-    if(isGcpAvailable){
-        const res = await gcpMetadata.instance('attributes');
-        client_id = res.data.CLIENTID
-        client_secret = res.data.CLIENTSECRET
-        redirect_uri = res.data.REDIRECTURI
-        console.log(redirect_uri)
-        setupPlayer(isGcpAvailable, res.data)
-
-    } else {
-        client_id = process.env.CLIENTID
-        client_secret = process.env.CLIENTSECRET
-        redirect_uri = process.env.REDIRECTURI
-        setupPlayer(false)
-    }
+        client_id = config.get('spotify.client_id')
+        console.log(client_id)
+        client_secret = config.get('spotify.client_secret')
+        redirect_uri = config.get('spotify.redirect_uri')
+        setupPlayer()
 }
 
-
-async function setupPlayer(isGCP, data) {
-    if(isGCP){
-        console.log('is GCP')
-        console.log(data);
-    }else{
-        console.log('is not GCP')
-    }
+async function setupPlayer() {
+   
     spotifyApi = new SpotifyWebApi({
         clientId : client_id,
         clientSecret : client_secret,
