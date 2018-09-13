@@ -95,6 +95,18 @@ $(function () {
         req.data = this.getAttribute('data-trackid');
         socket.emit('preview', req);
     });
+    $('.queue').on('click', 'div.remove', function(e) {
+        var req = {};
+        req.type = "removeSong";
+        req.data = $(this).parent().data('guid');
+        console.log(req.data)
+        socket.emit('editQueue', req);
+    });
+    $('#nuke-it').on('click',  function(e) {
+        var req = {};
+        req.type = "NukeIt";
+        socket.emit('editQueue', req);
+    });
     socket.on('test',function(data){
         console.dir(data);
     });
@@ -105,6 +117,7 @@ $(function () {
             var li = $("<li />");
             li.html(getPlaylistDiv(queue[i]));
             li.attr("data-trackid", queue[i].id);
+            li.attr("data-guid", queue[i].guid);
             $(".queue").append(li);
         }
     });
@@ -434,8 +447,12 @@ function getPlaylistDiv(data){
                             ` + artists + `
                         </div>
                     </div>
+                </div>
+                <div class="remove">
+                <i>X</i>
                 </div>`;
 }
+
 
 function ToastBuilder(options) {
     // options are optional

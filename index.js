@@ -182,7 +182,7 @@ io.on('connection', function(socket){
     console.log('a user connected');
     socket.emit('update-player', player)
     socket.emit('updateQueue', currentQueue);
-
+    socket.emit('test', 'come one buddy')
     socket.on('player-get-token', function(data, fn){
         checkToken().then(function(){
             fn(tokenData)
@@ -202,6 +202,8 @@ io.on('connection', function(socket){
     socket.on('player-ready', function(data){
         setPlayerVolume(socket)
         player.device_id = [data]
+        console.log('in here gettin ready')
+        console.log(socket.id)
         player.socket = socket.id
         console.dir(player)
         console.log('player-ready')
@@ -231,7 +233,7 @@ io.on('connection', function(socket){
                 }, function(err) {
                     console.error(err);
                 });
-            spotifyApi.searchTracks(data, {limit: 5})
+            spotifyApi.searchTracks(data, {limit: 10})
                 .then(function(response3) {
                     socket.emit('trackSrchResp', response3);
                 }, function(err) {
@@ -256,6 +258,7 @@ io.on('connection', function(socket){
     })
     socket.on('editQueue', function(req){
         if(req.type == "addSong"){
+            req.data.guid = guid()
             currentQueue.push(req.data);
             console.log('add song')
             if (player.currentPlaying == null ){
@@ -268,12 +271,21 @@ io.on('connection', function(socket){
             }
         } else if(req.type == "removeSong") {
             //remove by id
-            var rmIndex = findIndexInData(currentQueue, 'id', req.data)
+            var rmIndex = findIndexInData(currentQueue, 'guid', req.data)
             currentQueue.splice(rmIndex, 1)
             sendQueue()
 
         } else if(req.type == "moveSong"){
             moveSong(req);
+        } else if (req.type == "nukeIt"){
+            currentQueue = []
+            player.currentPlaying = null
+            if(player.state == "playing"){
+                if (io.sockets.connected[player.socket]) {
+                    io.sockets.connected[player.socket].emit('toggle-play')
+                }
+            }
+            sendQueue()
         }
     });
     socket.on('player_state_changed', function(data){
@@ -318,8 +330,10 @@ io.on('connection', function(socket){
         }
     })
     socket.on('scrub', function(data){
+        console.log('SEEEEKING')
+        console.log(player.socket)
         //if (io.sockets.connected[player.socket]) {
-            io.to(player.socket).emit('seek', data)
+            socket.broadcast.emit('seek', data)
         //}
     })
     function updatePlayerTime(){
@@ -393,7 +407,14 @@ io.on('connection', function(socket){
     }
 
 });
-
+function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
 function findIndexInData(data, property, value) {
     for(var i = 0, l = data.length ; i < l ; i++) {
       if(data[i][property] === value) {
