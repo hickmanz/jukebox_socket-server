@@ -11,8 +11,8 @@
     <!--SCRIPTS-->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type="text/javascript" src="/js/spotify-web-api.js"> </script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/spotify-web-api-js@1.1.1/src/spotify-web-api.min.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
     <script type="text/javascript" src="/js/main.js"> </script>
 
     <!--STYLES-->
@@ -41,9 +41,24 @@
                 </li>
             </ul>
         </div>
-        <div class="settings-holder">
-            <div class="settings-content"> 
-                <i class="icon-cog"></i> Settings
+        <div class="options-holder">
+            <div class="options">
+                <ul>
+                    <li>
+                        Playlist View: 
+                        <select id="playlist-view-options">
+                            <option value="bigImages">Big Image</option>
+                            <option value="smallImages">Small Image</option>
+                            <option value="noImages">No Image</option>
+                          </select>
+                    </li>
+                </ul>
+                <div class="options-cover">
+
+                </div>
+            </div>
+            <div class="options-label"> 
+                Options
            </div>
         </div>
     </div>
@@ -96,10 +111,10 @@
                     <div class="details">
                         <div class="description">
                             <div class="song-name">
-                                80's Film
+                                Add Some Music
                             </div>
                             <div class="song-artist">
-                                Jon Bellion
+                                 Please
                             </div>
                         </div>
                         <div class="control-status">

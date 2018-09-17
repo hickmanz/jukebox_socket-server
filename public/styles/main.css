@@ -111,20 +111,26 @@ html{
     width: 100vw;
 }
 .menu-holder{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     background: rgb(47, 47, 47);
     position: relative;
     height: 100%;
     width: 260px;
-    padding: 40px;
     color: white;
     float: left;
     box-shadow: 0 10px 14px rgba(0,0,0,.5), 0 4px 15px rgba(0,0,0,.5);
 }
 .logo-holder{
-    font-size: 25px;
+    font-size: 30px;
+    z-index: 5;
+    padding-top: 50px;
 }
 .menu-main-holder {
     padding-top: 80px;
+    z-index: 5;
 }
 .menu-main-holder ul{
     padding-left: 0px;
@@ -143,13 +149,49 @@ html{
 .menu-main-holder li I {
     float: right;
 }
-.settings-holder {
-    position: fixed;
-    left: 0;
-    bottom: 0;
+.options-holder {
+    display: flex;
+    margin-top: auto;
+    width: 100%;
+    flex-direction: column;
 }
-.settings-content {
-    margin: 0 auto;
+.options-cover{
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0%;
+    right: 0;
+    z-index: 1;
+    background: #2f2f2f;
+    -webkit-transition: top ease-in-out .25s;
+    -o-transition: top ease-in-out .25s;
+    transition: top ease-in-out .25s;
+}
+.options-cover.expanded{
+    top: -100%;
+}
+.options {
+    background: white;
+    color: #2f2f2f;
+    position: relative;
+    min-height: 200px;
+    padding: 20px;
+}
+.options select{
+    font-family: inherit;
+}
+.options-label{
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 300;
+    padding: 20px;
+    cursor: pointer;
+}
+.options-label:hover{
+    color: #c84b4c;
 }
 .activity-holder{
     display:none;
@@ -360,6 +402,7 @@ html{
     background: white;
     display:flex;
 }
+
 .playlist-holder li:active {
     box-shadow: 0 10px 14px rgba(0,0,0,.2), 0 4px 15px rgba(0,0,0,.2);
 }
@@ -386,6 +429,24 @@ html{
 .playlist .details .song-artist {
     font-size: 11px;
     font-weight: 300;
+}
+.playlist-holder.smallImages li{
+    height: 50px;
+    padding: 0px;
+}
+.playlist-holder.noImages li{
+    height: 35px;
+}
+.playlist-holder.noImages .description{
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+}
+.playlist-holder.noImages img{
+    display: none;
+}
+.playlist-holder.noImages .song-name {
+    padding-right: 50px;
 }
 .menu-expand-holder{
     height: 100%;

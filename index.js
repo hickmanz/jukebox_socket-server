@@ -183,6 +183,7 @@ io.on('connection', function(socket){
     socket.emit('update-player', player)
     socket.emit('updateQueue', currentQueue);
     socket.emit('test', 'come one buddy')
+    socket.emit('updateTokenData', tokenData)
     socket.on('player-get-token', function(data, fn){
         checkToken().then(function(){
             fn(tokenData)

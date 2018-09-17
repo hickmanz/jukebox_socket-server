@@ -1,4 +1,5 @@
 var playlistShown = true;
+var optionsShown = false;
 var windowState
 var currentResults = {};
 var recentList 
@@ -13,11 +14,23 @@ var player = {
 
 $(function () {
 
-    var socket = io();
+    var socket = io('http://api.zaqify.com:8080/');
+    //var socket = io('http://localhost:8080/');
 
     var searchBox = document.getElementById('query')
     var searchTimeout = null;
-    
+
+    var playlistImgSetting
+
+    if (window.localStorage.getItem('playlistimg') === null) {
+        window.localStorage.setItem('playlistimg', 'big')
+        playlistImgSetting = "big"
+    } else {
+        playlistImgSetting = window.localStorage.getItem('playlistimg')
+    }
+
+    configUserSettings()
+
     //init visual
     $(".artist-holder-row").hide();
     $("#search-outter").hide();
@@ -101,6 +114,7 @@ $(function () {
         req.data = $(this).parent().data('guid');
         console.log(req.data)
         socket.emit('editQueue', req);
+        showtoast('Song Removed')
     });
     $('#nuke-it').on('click',  function(e) {
         var req = {};
@@ -254,6 +268,9 @@ $(function () {
             showSearch()
         }
     });
+    $('.options-label').click(function () { // When arrow is clicked
+        toggleOptions()
+    });
     $('#recent').click(function () { // When arrow is clicked
         socket.emit('get-recently-played')
         if (playlistShown == true){
@@ -265,6 +282,21 @@ $(function () {
         }
     });
     $('.current-song-content').click(function () { // When arrow is clicked
+        if(playlistShown == false){
+            showPlaylist();
+        } else {
+            //if not control-status class
+            showSearch()
+        }
+    }).find('.control-status').click(function(e) {
+        if(playlistShown == false){
+            showPlaylist();
+        } else {
+            e.stopPropagation();
+        }
+    });
+ 
+    $('.logo-holder').click(function () { // When arrow is clicked
         if(playlistShown == false){
             showPlaylist();
         }
@@ -291,6 +323,25 @@ $(function () {
     });
     $( "#sortable" ).disableSelection();
 
+function configUserSettings(){
+    //playlist image size settings
+    $("#playlist-view-options").val(playlistImgSetting);
+    if(playlistImgSetting == "bigImages"){
+        $(".playlist-holder").removeClass("smallImages");
+        $(".playlist-holder").removeClass("noImages");
+    } else if(playlistImgSetting == "smallImages"){
+        $(".playlist-holder").addClass("smallImages");
+        $(".playlist-holder").removeClass("noImages");
+    }else if (playlistImgSetting == "noImages"){
+        $(".playlist-holder").removeClass("smallImages");
+        $(".playlist-holder").addClass("noImages");
+    }
+}
+$("#playlist-view-options").on('change', function() {
+    window.localStorage.setItem('playlistimg', $(this).val())
+    playlistImgSetting = $(this).val()
+    configUserSettings()
+});
 
 function updatePlayer(){
     if(player.currentPlaying == null){
@@ -360,6 +411,15 @@ function showSearch() {
     $(".current-song-holder").addClass("collapse");
     searchBox.focus()
     playlistShown = false;
+}
+function toggleOptions() {
+    if(optionsShown){
+        $(".options-cover").removeClass("expanded");
+        optionsShown = false;
+    } else {
+        $(".options-cover").addClass("expanded");
+        optionsShown = true;
+    }
 }
 function showRecent() {
     windowState = "recent"
