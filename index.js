@@ -201,29 +201,7 @@ io.on('connection', function(socket){
         //calc and let everyone know whats up
     })
     socket.on('shuffle-playlist', function(){
-        function shuffle(array) {
-            var currentIndex = array.length, temporaryValue, randomIndex;
-          
-            // While there remain elements to shuffle...
-            while (0 !== currentIndex) {
-          
-              // Pick a remaining element...
-              randomIndex = Math.floor(Math.random() * currentIndex);
-              currentIndex -= 1;
-          
-              // And swap it with the current element.
-              temporaryValue = array[currentIndex];
-              array[currentIndex] = array[randomIndex];
-              array[randomIndex] = temporaryValue;
-            }
-          
-            return array;
-          }
-          
-          // Used like so
-          currentQueue = shuffle(currentQueue);
-          console.log(currentQueue);
-          sendQueue()
+        shuffle(currentQueue);
     })
     socket.on('player-ready', function(data){
         setPlayerVolume(socket)
@@ -362,6 +340,29 @@ io.on('connection', function(socket){
             socket.broadcast.emit('seek', data)
         //}
     })
+    function shuffle(array) {
+        var currentIndex = array.length
+        , temporaryValue
+        , randomIndex
+        ;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        currentQueue = array
+        sendQueue()
+    }
+
     function updatePlayerTime(){
         clearInterval(playerTimer)
         if(player.duration !== 0 ){
