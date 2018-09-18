@@ -231,7 +231,7 @@ html{
 .current-song-background{
     width: 110%;
     height: 110%;
-    background-image: url('https://i.scdn.co/image/ae66cbcb48eb496ef4bf6bc38b604e850d2ed68d');
+    background-image: url('../images/robot.png');
     background-size: 110%;
     background-position: center;
     filter: blur(8px);
