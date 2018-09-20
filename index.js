@@ -242,7 +242,7 @@ io.on('connection', function(socket){
                 }, function(err) {
                     console.error(err);
                 });
-            spotifyApi.searchTracks(data, {limit: 35})
+            spotifyApi.searchTracks(data, {limit: 50})
                 .then(function(response3) {
                     socket.emit('trackSrchResp', response3);
                 }, function(err) {
