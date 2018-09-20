@@ -220,6 +220,11 @@ io.on('connection', function(socket){
         })
 
     })
+    socket.on('restart-player', function(){
+        if (io.sockets.connected[player.socket]) {
+            io.sockets.connected[player.socket].emit('restart')
+        }
+    })
     socket.on('search', function(data){
         console.log('req from: ' + socket.id)
         console.log('search term: ' + data);
@@ -237,7 +242,7 @@ io.on('connection', function(socket){
                 }, function(err) {
                     console.error(err);
                 });
-            spotifyApi.searchTracks(data, {limit: 10})
+            spotifyApi.searchTracks(data, {limit: 35})
                 .then(function(response3) {
                     socket.emit('trackSrchResp', response3);
                 }, function(err) {
