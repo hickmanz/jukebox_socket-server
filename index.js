@@ -225,6 +225,11 @@ io.on('connection', function(socket){
             io.sockets.connected[player.socket].emit('restart')
         }
     })
+    socket.on('token_expired', function(){
+        checkToken().then(function(){
+            fn(tokenData)
+        })
+    })
     socket.on('search', function(data){
         console.log('req from: ' + socket.id)
         console.log('search term: ' + data);
