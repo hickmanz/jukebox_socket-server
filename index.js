@@ -388,7 +388,7 @@ io.on('connection', function(socket){
                             io.sockets.connected[player.socket].emit('time-check')
                         }
                     }
-                    if(player.duration - player.position < 500){
+                    if(player.duration - player.position < 1500){
                         playNextSong()
                     }
                 }, 500);
