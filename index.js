@@ -273,7 +273,16 @@ io.on('connection', function(socket){
     socket.on('editQueue', function(req){
         if(req.type == "addSong"){
             req.data.guid = guid()
-            currentQueue.push(...req.data);
+            if(req.data.length > 1){
+                req.data.forEach(function(track){
+                    currentQueue.push(track)
+                })
+                
+            }else {
+                currentQueue.push(req.data);
+            }
+            
+
             console.log('add song')
             if (player.currentPlaying == null ){
                 playNextSong()
