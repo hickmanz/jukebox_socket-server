@@ -275,7 +275,7 @@ io.on('connection', function(socket){
             req.data.guid = guid()
             if(req.data.length > 1){
                 req.data.forEach(function(track){
-                    if(req.data.is_local){
+                    if(track.is_local){
                         //dont add. alert
                     } else {
                         currentQueue.push(track)
