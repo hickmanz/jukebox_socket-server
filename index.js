@@ -275,11 +275,20 @@ io.on('connection', function(socket){
             req.data.guid = guid()
             if(req.data.length > 1){
                 req.data.forEach(function(track){
-                    currentQueue.push(track)
+                    if(req.data.is_local){
+                        //dont add. alert
+                    } else {
+                        currentQueue.push(track)
+                    }
                 })
                 
             }else {
-                currentQueue.push(req.data);
+                if(req.data.is_local){
+                    //dont add local songs 
+                    //alert people
+                } else {
+                    currentQueue.push(req.data);
+                }
             }
             
 
