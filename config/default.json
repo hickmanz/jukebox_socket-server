@@ -2,6 +2,6 @@
   "spotify": {
         "client_secret" : "c935d0a44207400d994571277722a095", 
         "client_id" : "fd4b30f8ddd544ba8fcedd8d99e80e50", 
-        "redirect_uri" : "http://api.zaqify.com:8080/callback"
+        "redirect_uri" : "https://api.zaqify.com:8080/callback"
     }
 }
