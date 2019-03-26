@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-var https = require('https').Server(app);
+var http = require('http').Server(app);
 var config = require('config');
 var querystring = require('querystring');
-var io = require('socket.io')(https);
+var io = require('socket.io')(http);
 const path = require('path')
 var SpotifyWebApi = require('spotify-web-api-node');
 
@@ -88,8 +88,6 @@ async function setupPlayer() {
 }
 
 getMetadata()
-
-
 
 app.get('/login', function(req, res) {
     res.redirect('https://accounts.spotify.com/authorize?' +
@@ -478,6 +476,6 @@ function findIndexInData(data, property, value) {
     }
     return -1;
   }
-https.listen(8080, function () {
+http.listen(8080, function () {
   console.log('Example app listening on port 3000!')
 })
