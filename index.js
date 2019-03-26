@@ -1,9 +1,20 @@
 const express = require('express')
 const app = express()
-var http = require('http').Server(app);
+
+var options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem')
+  };
+
+
+var https = require('https')
+
+var server = https.createServer(options, app);
+
+
 var config = require('config');
 var querystring = require('querystring');
-var io = require('socket.io')(http);
+var io = require('socket.io')(server);
 const path = require('path')
 var SpotifyWebApi = require('spotify-web-api-node');
 
@@ -476,6 +487,6 @@ function findIndexInData(data, property, value) {
     }
     return -1;
   }
-http.listen(8080, function () {
+server.listen(8080, function () {
   console.log('Example app listening on port 3000!')
 })
