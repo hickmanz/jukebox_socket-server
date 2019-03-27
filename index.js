@@ -2,16 +2,9 @@ const express = require('express')
 const app = express()
 const fs = require('fs')
 
+var http = require('http')
 
-var options = {
-    key: fs.readFileSync('./security/cert.key'),
-    cert: fs.readFileSync('./security/cert.pem')
-  };
-
-
-var https = require('https')
-
-var server = https.createServer(options, app);
+var server = http.createServer(app);
 
 
 var config = require('config');
