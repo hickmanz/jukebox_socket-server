@@ -1,18 +1,12 @@
+
 const express = require('express')
 const app = express()
-const fs = require('fs')
-
-var http = require('http')
-
-var server = http.createServer(app);
-
-
+var http = require('http').Server(app);
 var config = require('config');
 var querystring = require('querystring');
-var io = require('socket.io')(server);
+var io = require('socket.io')(http);
 const path = require('path')
 var SpotifyWebApi = require('spotify-web-api-node');
-
 const Datastore = require('nedb');
 const db = new Datastore({ filename: path.join('./', 'main.db'), autoload: true, timestampData: true  });
 
@@ -482,6 +476,6 @@ function findIndexInData(data, property, value) {
     }
     return -1;
   }
-server.listen(8080, function () {
-  console.log('Example app listening on port 3000!')
+http.listen(8080, function () {
+  console.log('Example app listening on port 8080!')
 })
